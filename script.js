@@ -132,15 +132,10 @@
       btn.className = "date-cell";
       if (sameDay(d, selectedDate)) btn.classList.add("selected");
 
-      const dow = document.createElement("span");
-      dow.className = "dow";
-      dow.textContent = DOW_SHORT[d.getDay()];
-
-      const day = document.createElement("span");
-      day.className = "day";
+      const day = document.createElement('span');
+      day.className = 'day';
       day.textContent = String(d.getDate());
 
-      btn.appendChild(dow);
       btn.appendChild(day);
 
       btn.addEventListener("click", () => selectDate(d));
