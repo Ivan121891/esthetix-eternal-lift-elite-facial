@@ -118,6 +118,10 @@
   // ------- Calendar render -------
   function renderMonth() {
     dateGrid.innerHTML = "";
+    const dowHeader = $("dow-header");
+    const monthHeader = $("month-header");
+    dowHeader.innerHTML = "";
+    monthHeader.innerHTML = "";
 
     const cells = [];
     const cursor = new Date(today);
@@ -126,17 +130,40 @@
       cursor.setDate(cursor.getDate() + 1);
     }
 
+    // Month header
+    const monthLabel = cells[0].toLocaleDateString(undefined, {
+      month: "long", year: "numeric",
+    });
+    const monthSpan = document.createElement("span");
+    monthSpan.className = "month-label";
+    monthSpan.textContent = monthLabel;
+    monthHeader.appendChild(monthSpan);
+
+    // Day-of-week header row (7 columns for full week layout)
+    const dowLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    dowLabels.forEach((label) => {
+      const el = document.createElement("span");
+      el.className = "dow-col";
+      el.textContent = label;
+      dowHeader.appendChild(el);
+    });
+
+    // Date cells, positioned under correct DOW column
     cells.forEach((d) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "date-cell";
       if (sameDay(d, selectedDate)) btn.classList.add("selected");
 
+      // Position under correct DOW column
+      btn.style.gridColumn = String(d.getDay() + 1);
+
       const day = document.createElement("span");
       day.className = "day";
       day.textContent = String(d.getDate());
 
       btn.appendChild(day);
+
       btn.addEventListener("click", () => selectDate(d));
       dateGrid.appendChild(btn);
     });
