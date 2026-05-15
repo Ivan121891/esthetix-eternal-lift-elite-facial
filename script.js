@@ -2,7 +2,7 @@
   "use strict";
 
   // ------- Configuration -------
-  const SERVICE_NAME = "Royal V-Line Rejuvenation";
+  const SERVICE_NAME = "Eternal Lift Elite Facial";
   const SERVICE_DURATION_MIN = 60;
 
   // GHL credentials
@@ -288,8 +288,8 @@
         lastName: lastName || '-',
         email,
         phone,
-        source: 'Royal V-Line LP',
-        tags: ['Royal V-Line Rejuvenation'],
+        source: 'Eternal Lift Elite Facial LP',
+        tags: ['Eternal Lift Elite Facial'],
       });
       const contactId = contactRes.contact?.id || contactRes.id;
 
@@ -305,7 +305,7 @@
           assignedUserId: GHL.userId,
           startTime:      isoInTz(start, BUSINESS_TZ),
           endTime:        isoInTz(end,   BUSINESS_TZ),
-          title:          `${name} — Royal V-Line Rejuvenation`,
+          title:          `${name} — Eternal Lift Elite Facial`,
           appointmentStatus: 'new',
           selectedTimezone: BUSINESS_TZ,
         });
