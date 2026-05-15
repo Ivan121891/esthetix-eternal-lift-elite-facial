@@ -307,21 +307,28 @@
       });
       const contactId = contactRes.contact?.id || contactRes.id;
 
-      // 2) Book appointment
-      // appointmentStatus: 'confirmed' ensures the booking is visible in
-      // the GHL dashboard calendar view (default 'new' may be hidden).
-      // selectedTimezone tells GHL which timezone the slot was picked in.
-      await ghlFetch('/calendars/events/appointments', {
-        calendarId: GHL.calendarId,
-        locationId: GHL.locationId,
-        contactId,
-        assignedUserId: GHL.userId,
-        startTime:      isoInTz(start, BUSINESS_TZ),
-        endTime:        isoInTz(end,   BUSINESS_TZ),
-        title:          `${name} — Royal V-Line Rejuvenation`,
-        appointmentStatus: 'confirmed',
-        selectedTimezone: BUSINESS_TZ,
-      });
+      // 2) Book appointment — if the calendar has no open hours configured,
+      //    the appointment endpoint may reject. We try it, but the contact
+      //    is already saved in GHL either way.
+      let appointmentCreated = false;
+      try {
+        await ghlFetch('/calendars/events/appointments', {
+          calendarId: GHL.calendarId,
+          locationId: GHL.locationId,
+          contactId,
+          assignedUserId: GHL.userId,
+          startTime:      isoInTz(start, BUSINESS_TZ),
+          endTime:        isoInTz(end,   BUSINESS_TZ),
+          title:          `${name} — Royal V-Line Rejuvenation`,
+          appointmentStatus: 'new',
+          selectedTimezone: BUSINESS_TZ,
+        });
+        appointmentCreated = true;
+      } catch (e) {
+        // Appointment creation failed (calendar may need open hours configured).
+        // Contact is already saved — proceed with confirmation.
+        appointmentCreated = false;
+      }
 
       track("Lead", { content_name: SERVICE_NAME });
       track("Schedule", { content_name: SERVICE_NAME });
@@ -330,6 +337,7 @@
         service: SERVICE_NAME,
         name, email, phone,
         time: selectedTime.label,
+        appointmentCreated,
       });
       showStep("confirmed");
     } catch (err) {
@@ -346,6 +354,11 @@
 
   // ------- Confirmation rendering -------
   function renderConfirmation(p) {
+    const subtitle = document.getElementById("confirmation-subtitle");
+    subtitle.textContent = p.appointmentCreated
+      ? "Your appointment has been booked. Check your email for details."
+      : "Your information has been saved. We will contact you shortly to confirm your appointment.";
+
     confirmCard.innerHTML = `
       <div class="row"><span class="label">Service</span><span>${escapeHtml(p.service)}</span></div>
       <div class="row"><span class="label">Date</span><span>${escapeHtml(formatLongDate(selectedDate))}</span></div>
