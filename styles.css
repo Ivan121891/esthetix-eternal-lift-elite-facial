@@ -106,26 +106,9 @@ body {
 /* Date grid */
 .date-grid {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  row-gap: 8px;
-  column-gap: 4px;
-}
-.month-header {
-  grid-column: 1 / -1;
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: center;
-  padding-bottom: 8px;
-  color: var(--foreground);
-}
-.dow-row {
-  display: contents;
-}
-.dow-label {
-  font-size: .75rem;
-  color: var(--muted-foreground);
-  text-align: center;
-  padding: 4px 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  row-gap: 16px;
+  column-gap: 8px;
 }
 .date-cell {
   display: flex;
@@ -136,9 +119,6 @@ body {
   padding: 0;
   cursor: pointer;
   font-family: inherit;
-}
-.date-cell.empty {
-  cursor: default;
 }
 .date-cell .day {
   width: 36px;
@@ -152,7 +132,7 @@ body {
   border-radius: 50%;
   transition: background-color .15s, color .15s;
 }
-.date-cell:hover .day:not(.empty) { background: var(--muted); }
+.date-cell:hover .day { background: var(--muted); }
 .date-cell.selected .day {
   background: var(--primary);
   color: var(--primary-fg);

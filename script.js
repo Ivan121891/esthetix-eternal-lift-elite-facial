@@ -116,58 +116,30 @@
   }
 
   // ------- Calendar render -------
-  const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const DOW_ABBR = ["S","M","T","W","T","F","S"];
-
   function renderMonth() {
     dateGrid.innerHTML = "";
 
-    const year = today.getFullYear();
-    const month = today.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    // Month header
-    const header = document.createElement("div");
-    header.className = "month-header";
-    header.textContent = MONTHS[month] + " " + year;
-    dateGrid.appendChild(header);
-
-    // Day-of-week header row
-    const dowRow = document.createElement("div");
-    dowRow.className = "dow-row";
-    DOW_ABBR.forEach((d) => {
-      const cell = document.createElement("span");
-      cell.className = "dow-label";
-      cell.textContent = d;
-      dowRow.appendChild(cell);
-    });
-    dateGrid.appendChild(dowRow);
-
-    // Empty cells before first day
-    for (let i = 0; i < firstDay; i++) {
-      const empty = document.createElement("div");
-      empty.className = "date-cell empty";
-      dateGrid.appendChild(empty);
+    const cells = [];
+    const cursor = new Date(today);
+    for (let i = 0; i < 6; i++) {
+      cells.push(new Date(cursor));
+      cursor.setDate(cursor.getDate() + 1);
     }
 
-    // Day cells
-    for (let d = 1; d <= daysInMonth; d++) {
-      const date = new Date(year, month, d);
+    cells.forEach((d) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "date-cell";
-      const daySpan = document.createElement("span");
-      daySpan.className = "day";
-      daySpan.textContent = String(d);
-      btn.appendChild(daySpan);
+      if (sameDay(d, selectedDate)) btn.classList.add("selected");
 
-      if (sameDay(date, selectedDate)) btn.classList.add("selected");
-      if (date < today) btn.classList.add("disabled");
+      const day = document.createElement("span");
+      day.className = "day";
+      day.textContent = String(d.getDate());
 
-      btn.addEventListener("click", () => selectDate(date));
+      btn.appendChild(day);
+      btn.addEventListener("click", () => selectDate(d));
       dateGrid.appendChild(btn);
-    }
+    });
   }
 
   function renderTimes() {
