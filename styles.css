@@ -103,51 +103,30 @@ body {
   color: var(--foreground);
 }
 
-/* Month header */
-.month-header {
-  text-align: center;
-  margin-bottom: 8px;
-}
-.month-label {
-  font-size: .9375rem;
-  font-weight: 600;
-  color: var(--foreground);
-}
-
-/* DOW column headers */
-.dow-header {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 2px;
-  margin-bottom: 8px;
-}
-.dow-col {
-  text-align: center;
-  font-size: .675rem;
-  font-weight: 600;
-  color: var(--muted-foreground);
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  padding: 2px 0;
-}
-
 /* Date grid */
 .date-grid {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 4px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  row-gap: 12px;
+  column-gap: 8px;
 }
 .date-cell {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  gap: 2px;
+  gap: 0;
   background: transparent;
   border: 0;
   padding: 6px 0;
   cursor: pointer;
   font-family: inherit;
+}
+.date-cell .dow-label {
+  font-size: .75rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  line-height: 1.2;
 }
 .date-cell .day {
   width: 34px;
@@ -155,8 +134,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: .875rem;
-  font-weight: 500;
+  font-size: .9375rem;
+  font-weight: 600;
   color: var(--foreground);
   border-radius: 50%;
   transition: background-color .15s, color .15s;
