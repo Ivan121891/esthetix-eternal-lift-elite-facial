@@ -106,37 +106,53 @@ body {
 /* Date grid */
 .date-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  row-gap: 16px;
-  column-gap: 8px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  row-gap: 8px;
+  column-gap: 4px;
+}
+.month-header {
+  grid-column: 1 / -1;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  padding-bottom: 8px;
+  color: var(--foreground);
+}
+.dow-row {
+  display: contents;
+}
+.dow-label {
+  font-size: .75rem;
+  color: var(--muted-foreground);
+  text-align: center;
+  padding: 4px 0;
 }
 .date-cell {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
   background: transparent;
   border: 0;
   padding: 0;
   cursor: pointer;
   font-family: inherit;
 }
-.date-cell .dow {
-  font-size: .75rem;
-  color: var(--muted-foreground);
-  margin-bottom: 4px;
+.date-cell.empty {
+  cursor: default;
 }
 .date-cell .day {
-  padding: 8px 24px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: .875rem;
   font-weight: 500;
   color: var(--foreground);
-  border-radius: var(--radius-pill);
+  border-radius: 50%;
   transition: background-color .15s, color .15s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
-.date-cell:hover .day { background: var(--muted); }
+.date-cell:hover .day:not(.empty) { background: var(--muted); }
 .date-cell.selected .day {
   background: var(--primary);
   color: var(--primary-fg);

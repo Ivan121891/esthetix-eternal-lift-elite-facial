@@ -1,121 +1,120 @@
-     1|<!DOCTYPE html>
-     2|<html lang="en">
-     3|<head>
-     4|  <meta charset="utf-8">
-     5|  <meta name="viewport" content="width=device-width, initial-scale=1">
-     6|  <title>Royal V-Line Rejuvenation — Appointment Booking</title>
-     7|  <meta name="description" content="Book your Royal V-Line Rejuvenation appointment at Esthetix">
-     8|  <meta name="theme-color" content="#F5D88E">
-     9|  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23F5D88E'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-family='system-ui' font-size='18' fill='%230a0a0a' font-weight='600' dominant-baseline='middle'%3EER%3C/text%3E%3C/svg%3E">
-    10|  <link rel="preload" as="image" href="images/hero-image.jpg">
-    11|  <link rel="stylesheet" href="styles.css">
-    12|
-    13|  <!-- Meta Pixel -->
-    14|  <script>
-    15|    !function(f,b,e,v,n,t,s)
-    16|    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    17|    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    18|    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    19|    n.queue=[];t=b.createElement(e);t.async=!0;
-    20|    t.src=v;s=b.getElementsByTagName(e)[0];
-    21|    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    22|    'https://connect.facebook.net/en_US/fbevents.js');
-    23|    fbq('init', '1178133073434960');
-    24|    fbq('track', 'PageView');
-    25|  </script>
-    26|  <noscript><img height="1" width="1" style="display:none"
-    27|    src="https://www.facebook.com/tr?id=1178133073434960&ev=PageView&noscript=1" alt="" /></noscript>
-    28|</head>
-    29|<body>
-    30|  <div class="page">
-    31|    <div class="card" id="card">
-    32|      <!-- Hero image -->
-    33|      <div class="hero">
-    34|        <img src="images/hero-image.jpg" alt="Woman receiving a Royal V-Line Rejuvenation facial treatment">
-    35|      </div>
-    36|
-    37|      <!-- STEP 1: Date selection -->
-    38|      <section class="content" id="step-date">
-    39|        <h1 class="title">Choose date and time for your <span class="accent">Royal V-Line Rejuvenation</span> appointment</h1>
-    40|
-    41|        <div class="section">
-    42|          <h2 class="section-title">Date</h2>
-    43|          <div class="date-grid" id="date-grid"></div>
-    44|        </div>
-    45|
-    46|        <p class="address">73399 El Paseo, Suite #104<br>Palm Desert, CA 92260</p>
-    47|      </section>
-    48|
-    49|      <!-- STEP 2: Time selection -->
-    50|      <section class="content hidden" id="step-time">
-    51|        <button type="button" class="back-btn" data-back="date">
-    52|          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
-    53|          Back
-    54|        </button>
-    55|        <h1 class="title">Select your preferred time</h1>
-    56|        <p class="subtitle" id="time-summary"></p>
-    57|
-    58|        <div class="time-block">
-    59|          <p class="time-label">Morning</p>
-    60|          <div class="time-grid" id="morning-grid"></div>
-    61|        </div>
-    62|
-    63|        <div class="time-block">
-    64|          <p class="time-label">Afternoon</p>
-    65|          <div class="time-grid" id="afternoon-grid"></div>
-    66|        </div>
-    67|      </section>
-    68|
-    69|      <!-- STEP 3: Customer details form -->
-    70|      <section class="content hidden" id="step-details">
-    71|        <button type="button" class="back-btn" data-back="time">
-    72|          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
-    73|          Back
-    74|        </button>
-    75|        <h1 class="title">Enter your details</h1>
-    76|        <p class="subtitle" id="details-summary"></p>
-    77|
-    78|        <form id="details-form" class="form" autocomplete="on" novalidate>
-    79|          <label class="field">
-    80|            <span class="field-label">Name</span>
-    81|            <input type="text" name="name" id="name" placeholder="Full name" autocomplete="name" required>
-    82|          </label>
-    83|          <label class="field">
-    84|            <span class="field-label">Email</span>
-    85|            <input type="email" name="email" id="email" placeholder="name@example.com" autocomplete="email" required>
-    86|          </label>
-    87|          <label class="field">
-    88|            <span class="field-label">Phone</span>
-    89|            <input type="tel" name="phone" id="phone" placeholder="(123) 456-7890" autocomplete="tel" required>
-    90|          </label>
-    91|
-    92|          <button type="submit" class="primary-btn" id="submit-btn">
-    93|            <span class="btn-label">Schedule Appointment</span>
-    94|            <span class="spinner hidden" aria-hidden="true"></span>
-    95|          </button>
-    96|          <p class="error-text hidden" id="error-text">Failed to book appointment</p>
-    97|        </form>
-    98|      </section>
-    99|
-   100|      <!-- STEP 4: Confirmation -->
-   101|      <section class="content hidden confirmation" id="step-confirmed">
-   102|        <div class="check-icon" aria-hidden="true">
-   103|          <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
-   104|        </div>
-   105|        <h1 class="title center">Appointment Requested!</h1>
-   106|        <p class="subtitle center">You will receive a confirmation shortly.</p>
-   107|
-   108|        <div class="confirm-card" id="confirm-card"></div>
-   109|
-   110|        <a class="primary-btn" id="gcal-link" target="_blank" rel="noopener noreferrer">
-   111|          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>
-   112|          Add to Google Calendar
-   113|        </a>
-   114|        <button type="button" class="secondary-btn" id="reset-btn">Book Another Appointment</button>
-   115|      </section>
-   116|    </div>
-   117|  </div>
-   118|
-   119|  <script src="script.js"></script>
-   120|</body>
-   121|</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Royal V-Line Rejuvenation — Appointment Booking</title>
+  <meta name="description" content="Book your Royal V-Line Rejuvenation appointment at Esthetix">
+  <meta name="theme-color" content="#F5D88E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23F5D88E'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-family='system-ui' font-size='18' fill='%230a0a0a' font-weight='600' dominant-baseline='middle'%3EER%3C/text%3E%3C/svg%3E">
+  <link rel="preload" as="image" href="images/hero-image.jpg">
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1178133073434960');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1178133073434960&ev=PageView&noscript=1" alt="" /></noscript>
+</head>
+<body>
+  <div class="page">
+    <div class="card" id="card">
+      <!-- Hero image -->
+      <div class="hero">
+        <img src="images/hero-image.jpg" alt="Woman receiving a Royal V-Line Rejuvenation facial treatment">
+      </div>
+
+      <!-- STEP 1: Date selection -->
+      <section class="content" id="step-date">
+        <h1 class="title">Choose date and time for your <span class="accent">Royal V-Line Rejuvenation</span> appointment</h1>
+
+        <div class="section">
+          <div class="date-grid" id="date-grid"></div>
+        </div>
+
+        <p class="address">73399 El Paseo, Suite #104<br>Palm Desert, CA 92260</p>
+      </section>
+
+      <!-- STEP 2: Time selection -->
+      <section class="content hidden" id="step-time">
+        <button type="button" class="back-btn" data-back="date">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+          Back
+        </button>
+        <h1 class="title">Select your preferred time</h1>
+        <p class="subtitle" id="time-summary"></p>
+
+        <div class="time-block">
+          <p class="time-label">Morning</p>
+          <div class="time-grid" id="morning-grid"></div>
+        </div>
+
+        <div class="time-block">
+          <p class="time-label">Afternoon</p>
+          <div class="time-grid" id="afternoon-grid"></div>
+        </div>
+      </section>
+
+      <!-- STEP 3: Customer details form -->
+      <section class="content hidden" id="step-details">
+        <button type="button" class="back-btn" data-back="time">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+          Back
+        </button>
+        <h1 class="title">Enter your details</h1>
+        <p class="subtitle" id="details-summary"></p>
+
+        <form id="details-form" class="form" autocomplete="on" novalidate>
+          <label class="field">
+            <span class="field-label">Name</span>
+            <input type="text" name="name" id="name" placeholder="Full name" autocomplete="name" required>
+          </label>
+          <label class="field">
+            <span class="field-label">Email</span>
+            <input type="email" name="email" id="email" placeholder="name@example.com" autocomplete="email" required>
+          </label>
+          <label class="field">
+            <span class="field-label">Phone</span>
+            <input type="tel" name="phone" id="phone" placeholder="(123) 456-7890" autocomplete="tel" required>
+          </label>
+
+          <button type="submit" class="primary-btn" id="submit-btn">
+            <span class="btn-label">Schedule Appointment</span>
+            <span class="spinner hidden" aria-hidden="true"></span>
+          </button>
+          <p class="error-text hidden" id="error-text">Failed to book appointment</p>
+        </form>
+      </section>
+
+      <!-- STEP 4: Confirmation -->
+      <section class="content hidden confirmation" id="step-confirmed">
+        <div class="check-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+        </div>
+        <h1 class="title center">Appointment Requested!</h1>
+        <p class="subtitle center">You will receive a confirmation shortly.</p>
+
+        <div class="confirm-card" id="confirm-card"></div>
+
+        <a class="primary-btn" id="gcal-link" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>
+          Add to Google Calendar
+        </a>
+        <button type="button" class="secondary-btn" id="reset-btn">Book Another Appointment</button>
+      </section>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
