@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  const TEST = new URLSearchParams(location.search).get('test') === '1';
+
   // ------- Configuration -------
   const SERVICE_NAME = "Eternal Lift Elite Facial";
   const SERVICE_DURATION_MIN = 60;
@@ -101,7 +103,7 @@
       a.getDate() === b.getDate();
   }
   function formatLongDate(d) {
-    return d.toLocaleDateString(undefined, {
+    return d.toLocaleDateString('en-US', {
       weekday: "long", month: "long", day: "numeric", year: "numeric",
     });
   }
@@ -282,14 +284,37 @@
 
     try {
       // 1) Upsert contact in GHL
+      // Persist the lead + chosen slot BEFORE any GHL call (non-blocking).
+      var leadId = null;
+      try {
+        const _leadRes = await fetch('/api/lead', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+          body: JSON.stringify({
+            locationId: GHL.locationId,
+            client: location.hostname.split('.')[0].split('-')[0],
+            page: location.hostname,
+            treatment: SERVICE_NAME,
+            calendarId: GHL.calendarId,
+            startTime: isoInTz(start, BUSINESS_TZ),
+            endTime: isoInTz(end, BUSINESS_TZ),
+            name, email, phone,
+            fbclid: (new URLSearchParams(location.search)).get('fbclid') || undefined,
+            fbp: (document.cookie.match(/_fbp=([^;]+)/) || [])[1],
+            fbc: (document.cookie.match(/_fbc=([^;]+)/) || [])[1],
+            test: TEST,
+          }),
+        });
+        const _leadJson = await _leadRes.json().catch(function () { return {}; });
+        leadId = _leadJson.leadId || null;
+      } catch (_) { /* never block booking on lead persistence */ }
       const contactRes = await ghlFetch('/contacts/upsert', {
         locationId: GHL.locationId,
-        firstName: firstName || name,
+        firstName: (TEST ? "[TEST] " : "") + (firstName || name),
         lastName: lastName || '-',
         email,
         phone,
         source: 'Eternal Lift Elite Facial LP',
-        tags: ['Eternal Lift Elite Facial'],
+        tags: TEST ? ['Eternal Lift Elite Facial', 'TEST-DONOTCOUNT'] : ['Eternal Lift Elite Facial'],
       });
       const contactId = contactRes.contact?.id || contactRes.id;
 
@@ -297,9 +322,11 @@
       //    the appointment endpoint may reject. We try it, but the contact
       //    is already saved in GHL either way.
       let appointmentCreated = false;
+      let _aptRes = null;
       try {
-        await ghlFetch('/calendars/events/appointments', {
+        _aptRes = await ghlFetch('/calendars/events/appointments', {
           calendarId: GHL.calendarId,
+          ignoreFreeSlotValidation: true,
           locationId: GHL.locationId,
           contactId,
           assignedUserId: GHL.userId,
@@ -316,8 +343,16 @@
         appointmentCreated = false;
       }
 
+      const appointmentId = (_aptRes && (_aptRes.id || _aptRes.appointmentId || (_aptRes.appointment && _aptRes.appointment.id))) || null;
+      try {
+        fetch('/api/lead/result', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+          body: JSON.stringify({ leadId: leadId, locationId: GHL.locationId, status: 'success', appointmentId: appointmentId, eventId: (typeof eventId !== 'undefined' ? eventId : null), scheduleFired: !TEST, test: TEST }),
+        }).catch(function () {});
+      } catch (_) {}
+
       track("Lead", { content_name: SERVICE_NAME });
-      track("Schedule", { content_name: SERVICE_NAME });
+      if (!TEST) track("Schedule", { content_name: SERVICE_NAME });
 
       renderConfirmation({
         service: SERVICE_NAME,
@@ -328,6 +363,12 @@
       showStep("confirmed");
     } catch (err) {
       console.error("GHL booking error", err);
+      try {
+        fetch('/api/lead/result', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+          body: JSON.stringify({ leadId: leadId, locationId: GHL.locationId, status: 'fail', error: (err && err.message) ? err.message : String(err), test: TEST }),
+        }).catch(function () {});
+      } catch (_) {}
       const detail = (err && err.message) ? err.message : "Booking failed. Please try again or call us.";
       errorText.textContent = detail;
       errorText.classList.remove("hidden");
